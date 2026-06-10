@@ -31,6 +31,12 @@ const HTML_FILES = {
     { file: 'public/js/main.js', pattern: /\/js\/main\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/favicon.svg', pattern: /\/favicon\.svg\?v=[a-zA-Z0-9]+/ },
   ],
+  'public/videos.html': [
+    { file: 'public/css/style.css', pattern: /\/css\/style\.css\?v=[a-zA-Z0-9]+/ },
+    { file: 'public/css/tailwind.min.css', pattern: /\/css\/tailwind\.min\.css\?v=[a-zA-Z0-9]+/ },
+    { file: 'public/js/video-center.js', pattern: /\/js\/video-center\.js\?v=[a-zA-Z0-9]+/ },
+    { file: 'public/favicon.svg', pattern: /\/favicon\.svg\?v=[a-zA-Z0-9]+/ },
+  ],
   'public/admin/index.html': [
     { file: 'public/css/admin-layout.css', pattern: /\/css\/admin-layout\.css\?v=[a-zA-Z0-9]+/ },
     { file: 'public/css/admin-forms.css', pattern: /\/css\/admin-forms\.css\?v=[a-zA-Z0-9]+/ },
@@ -67,6 +73,7 @@ const HTML_FILES = {
     { file: 'public/js/admin-settings-ai.js', pattern: /\/js\/admin-settings-ai\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/js/admin-settings.js', pattern: /\/js\/admin-settings\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/js/admin-import-export.js', pattern: /\/js\/admin-import-export\.js\?v=[a-zA-Z0-9]+/ },
+    { file: 'public/js/admin-videos.js', pattern: /\/js\/admin-videos\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/favicon.svg', pattern: /\/favicon\.svg\?v=[a-zA-Z0-9]+/ },
   ]
 };

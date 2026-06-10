@@ -285,6 +285,82 @@
     els.youtubeFields?.classList.toggle('hidden', platform !== 'youtube');
   }
 
+  // 解析 Bilibili URL，提取 bvid/aid/cid/page
+  function parseBilibiliUrl(url) {
+    if (!url) return null;
+    const trimmed = String(url).trim();
+
+    // 匹配 BV 号
+    const bvMatch = trimmed.match(/\/video\/(BV[\w]+)/i);
+    const bvid = bvMatch ? bvMatch[1] : null;
+
+    // 匹配 av 号 (aid)
+    const avMatch = trimmed.match(/\/video\/(av\d+)/i);
+    const aid = avMatch ? avMatch[1].replace(/^av/i, '') : null;
+
+    // 匹配 P 参数 (分P)
+    const pMatch = trimmed.match(/[?&]p=(\d+)/i);
+    const page = pMatch ? parseInt(pMatch[1], 10) : 1;
+
+    // 匹配 t 参数 (时间戳，可选)
+    const tMatch = trimmed.match(/[?&]t=(\d+)/i);
+    const startTime = tMatch ? parseInt(tMatch[1], 10) : null;
+
+    if (!bvid && !aid) return null;
+
+    return { bvid, aid, page: page || 1, startTime, platform: 'bilibili' };
+  }
+
+  // 解析 YouTube URL，提取 videoId
+  function parseYoutubeUrl(url) {
+    if (!url) return null;
+    const trimmed = String(url).trim();
+
+    // 匹配 youtu.be/xxx
+    const shortMatch = trimmed.match(/youtu\.be\/([\w-]+)/i);
+    if (shortMatch) return { youtubeId: shortMatch[1], platform: 'youtube' };
+
+    // 匹配 youtube.com/watch?v=xxx
+    const watchMatch = trimmed.match(/[?&]v=([\w-]+)/i);
+    if (watchMatch) return { youtubeId: watchMatch[1], platform: 'youtube' };
+
+    // 匹配 youtube.com/embed/xxx
+    const embedMatch = trimmed.match(/embed\/([\w-]+)/i);
+    if (embedMatch) return { youtubeId: embedMatch[1], platform: 'youtube' };
+
+    return null;
+  }
+
+  // 自动解析视频 URL 并填充相关字段
+  function autoParseVideoUrl() {
+    const url = els.videoUrl?.value?.trim();
+    if (!url) return;
+
+    // 尝试解析 Bilibili
+    const bilibiliInfo = parseBilibiliUrl(url);
+    if (bilibiliInfo) {
+      els.videoPlatform.value = 'bilibili';
+      if (bilibiliInfo.bvid) els.videoBvid.value = bilibiliInfo.bvid;
+      if (bilibiliInfo.aid) els.videoAid.value = bilibiliInfo.aid;
+      els.videoPage.value = bilibiliInfo.page || 1;
+      updatePlatformFields();
+      return;
+    }
+
+    // 尝试解析 YouTube
+    const youtubeInfo = parseYoutubeUrl(url);
+    if (youtubeInfo) {
+      els.videoPlatform.value = 'youtube';
+      els.videoYoutubeId.value = youtubeInfo.youtubeId;
+      updatePlatformFields();
+      return;
+    }
+
+    // 默认普通链接
+    els.videoPlatform.value = 'link';
+    updatePlatformFields();
+  }
+
   async function submitVideoCategory(event) {
     event.preventDefault();
     const id = els.videoCategoryId.value;
@@ -422,6 +498,13 @@
     els.videoPageSizeSelect?.addEventListener('change', () => {
       state.videoPageSize = Number(els.videoPageSizeSelect.value || 50);
       loadVideos(1);
+    });
+
+    // 视频 URL 自动解析
+    els.videoUrl?.addEventListener('blur', autoParseVideoUrl);
+    els.videoUrl?.addEventListener('paste', (e) => {
+      // 延迟执行，等待粘贴内容生效
+      setTimeout(autoParseVideoUrl, 0);
     });
   }
 

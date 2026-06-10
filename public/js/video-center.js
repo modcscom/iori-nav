@@ -40,17 +40,24 @@
   function getVideoEmbedHtml(video) {
     if (!video) return '<div class="w-full h-full flex items-center justify-center text-gray-400">暂无视频</div>';
 
-    if (video.platform === 'bilibili' && video.bvid && video.cid) {
-      const src = `https://player.bilibili.com/player.html?isOutside=true&bvid=${encodeURIComponent(video.bvid)}&aid=${encodeURIComponent(video.aid || '')}&cid=${encodeURIComponent(video.cid)}&p=${encodeURIComponent(video.page || 1)}&autoplay=1`;
+    // Bilibili 播放 - 只需要 bvid 即可播放
+    if (video.platform === 'bilibili' && video.bvid) {
+      const src = `https://player.bilibili.com/player.html?isOutside=true&bvid=${encodeURIComponent(video.bvid)}&p=${encodeURIComponent(video.page || 1)}&autoplay=1`;
       return `<iframe src="${src}" class="w-full h-full border-0" allowfullscreen scrolling="no"></iframe>`;
     }
 
+    // YouTube 播放
     if (video.platform === 'youtube' && video.youtube_id) {
       const src = `https://www.youtube.com/embed/${encodeURIComponent(video.youtube_id)}?autoplay=1`;
       return `<iframe src="${src}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     }
 
+    // 普通链接 - 尝试用 iframe 打开
     const safeUrl = normalizeUrl(video.url);
+    if (safeUrl) {
+      return `<iframe src="${escapeHTML(safeUrl)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+    }
+
     return `<div class="w-full h-full flex flex-col items-center justify-center gap-3 text-gray-300"><p>该视频暂不支持内嵌播放</p><a class="inline-flex items-center px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700" href="${escapeHTML(safeUrl)}" target="_blank" rel="noopener noreferrer">新窗口打开</a></div>`;
   }
 
