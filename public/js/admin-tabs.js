@@ -20,6 +20,8 @@
           window.fetchCategories?.();
         } else if (tab === 'pending') {
           window.fetchPendingConfigs?.();
+        } else if (tab === 'video-categories' || tab === 'videos') {
+          window.AdminVideos?.refreshAll?.();
         }
       });
     });

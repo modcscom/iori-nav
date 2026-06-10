@@ -129,7 +129,7 @@
 
   function findCategoryLabel(nodes, id) {
     for (const node of nodes) {
-      if (String(node.id) === String(id)) return node.catelog;
+      if (String(node.id) === String(id)) return node.catelog || node.name;
       if (node.children) {
         const found = findCategoryLabel(node.children, id);
         if (found) return found;
@@ -200,13 +200,13 @@
       item.style.paddingLeft = `${15 + depth * 20}px`;
 
       const textSpan = document.createElement('span');
-      textSpan.textContent = `${depth > 0 ? '└─ ' : ''}${node.catelog}`;
+      textSpan.textContent = `${depth > 0 ? '└─ ' : ''}${node.catelog || node.name}`;
       item.appendChild(textSpan);
 
       item.addEventListener('click', (e) => {
         e.stopPropagation();
         input.value = node.id;
-        trigger.textContent = node.catelog;
+        trigger.textContent = node.catelog || node.name;
         menu.classList.remove('show');
         input.dispatchEvent(new Event('change'));
       });
@@ -224,7 +224,7 @@
     const input = document.getElementById(inputId);
     if (!container || !input) return;
 
-    const isFilter = inputId === 'categoryFilter' || inputId === 'batchCategoryFilter';
+    const isFilter = inputId === 'categoryFilter' || inputId === 'batchCategoryFilter' || inputId === 'videoCategoryFilter';
     const initialLabel = getInitialDropdownLabel(input, categoriesTree, initialValue, isFilter);
 
     container.innerHTML = '';

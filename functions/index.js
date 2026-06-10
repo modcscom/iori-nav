@@ -336,6 +336,10 @@ export async function onRequest(context) {
   let sidebarToggleClass = '';
   let mobileToggleVisibilityClass = 'lg:hidden';
   let adminIconHtml = '';
+  const videoIconHtml = `
+    <a href="/videos" class="top-action-icon video-action-icon" title="视频中心">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg>
+    </a>`;
   const themeIconHtml = `
     <button id="themeToggleBtn" class="top-action-icon theme-action-icon" title="切换主题">
       <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block dark:hidden"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
@@ -362,7 +366,7 @@ export async function onRequest(context) {
       <div class="hidden min-[550px]:block">${horizontalHeaderContent}</div>`;
   }
 
-  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${themeIconHtml}${adminIconHtml}</div>`;
+  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${videoIconHtml}${themeIconHtml}${adminIconHtml}</div>`;
   const leftTopActionHtml = `
     <div class="fixed top-4 left-4 z-50 ${mobileToggleVisibilityClass}">
       <button id="sidebarToggle" class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">

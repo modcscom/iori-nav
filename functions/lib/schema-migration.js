@@ -20,7 +20,12 @@ async function runIncrementalMigrations(env) {
     env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_sites_sort_order ON sites(sort_order)'),
     env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_sites_private_sort ON sites(is_private, sort_order)'),
     env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_sites_catelog_name ON sites(catelog_name)'),
-    env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_sites_url ON sites(url)')
+    env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_sites_url ON sites(url)'),
+    env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_video_categories_parent_sort ON video_categories(parent_id, sort_order)'),
+    env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_videos_category_id ON videos(category_id)'),
+    env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_videos_sort_order ON videos(sort_order)'),
+    env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_videos_category_name ON videos(category_name)'),
+    env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_videos_platform ON videos(platform)')
   ]);
 
   const [sitesColumns, categoryColumns, pendingColumns] = await Promise.all([

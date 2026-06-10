@@ -47,3 +47,39 @@ CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
   value TEXT
 );
+
+-- 视频分类表
+CREATE TABLE IF NOT EXISTS video_categories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 9999,
+  parent_id INTEGER DEFAULT 0,
+  create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 视频表
+CREATE TABLE IF NOT EXISTS videos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  url TEXT NOT NULL,
+  cover TEXT,
+  desc TEXT,
+  category_id INTEGER NOT NULL,
+  category_name TEXT,
+  platform TEXT NOT NULL DEFAULT 'link',
+  bvid TEXT,
+  aid TEXT,
+  cid TEXT,
+  page INTEGER DEFAULT 1,
+  youtube_id TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 9999,
+  create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_video_categories_parent_sort ON video_categories(parent_id, sort_order);
+CREATE INDEX IF NOT EXISTS idx_videos_category_id ON videos(category_id);
+CREATE INDEX IF NOT EXISTS idx_videos_sort_order ON videos(sort_order);
+CREATE INDEX IF NOT EXISTS idx_videos_category_name ON videos(category_name);
+CREATE INDEX IF NOT EXISTS idx_videos_platform ON videos(platform);

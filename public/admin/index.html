@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>书签管理页面</title>
   <link rel="icon" href="/favicon.svg?v=148aafdf" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/admin-layout.css?v=d20af02c" />
-  <link rel="stylesheet" href="/css/admin-forms.css?v=70b67305" />
-  <link rel="stylesheet" href="/css/admin-card-options.css?v=55b9995c" />
-  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=9b873f51" />
-  <link rel="stylesheet" href="/css/admin-preview-controls.css?v=9ceec774" />
-  <link rel="stylesheet" href="/css/admin-preview-cards.css?v=1feb6fbc" />
-  <link rel="stylesheet" href="/css/admin-settings-modal.css?v=d50702a6" />
-  <link rel="stylesheet" href="/css/admin-card-preview.css?v=a42c3dea" />
-  <link rel="stylesheet" href="/css/admin-feedback.css?v=15b4dada" />
-  <link rel="stylesheet" href="/css/admin-dropdown.css?v=9efddb85" />
+  <link rel="stylesheet" href="/css/admin-layout.css?v=0c9a1e9c" />
+  <link rel="stylesheet" href="/css/admin-forms.css?v=4b439f93" />
+  <link rel="stylesheet" href="/css/admin-card-options.css?v=32c2dfc2" />
+  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=7643eb01" />
+  <link rel="stylesheet" href="/css/admin-preview-controls.css?v=9bbb1b1f" />
+  <link rel="stylesheet" href="/css/admin-preview-cards.css?v=7bedb34b" />
+  <link rel="stylesheet" href="/css/admin-settings-modal.css?v=60f9d7cf" />
+  <link rel="stylesheet" href="/css/admin-card-preview.css?v=0d44f94c" />
+  <link rel="stylesheet" href="/css/admin-feedback.css?v=7f73bd85" />
+  <link rel="stylesheet" href="/css/admin-dropdown.css?v=a8270a59" />
   <link rel="stylesheet" href="/css/tailwind.min.css?v=94e9f2cc">
 </head>
 
@@ -72,6 +72,20 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           新增分类
+        </button>
+        <button id="addVideoCategoryBtn"
+          class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          新增视频分类
+        </button>
+        <button id="addVideoBtn"
+          class="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          新增视频
         </button>
         <button id="addBookmarkBtn"
           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium text-sm flex items-center gap-1 h-[42px] whitespace-nowrap">
@@ -425,6 +439,94 @@
               class="w-24 h-10 m-0 flex items-center justify-center bg-gray-100 text-gray-600 rounded hover:bg-gray-200 text-sm font-medium transition-colors">取消</button>
             <button type="submit"
               class="w-24 h-10 !mt-0 m-0 flex items-center justify-center bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium shadow-sm transition-colors">通过</button>
+          </div>
+        </form>
+      </div>
+    </div>    <!-- 视频分类模态框 -->
+    <div id="videoCategoryModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="modal-close" id="closeVideoCategoryModal">×</span>
+        <h2 id="videoCategoryModalTitle">新增视频分类</h2>
+        <form id="videoCategoryForm">
+          <input type="hidden" id="videoCategoryId">
+          <div class="form-group">
+            <label for="videoCategoryName">分类名称:</label>
+            <input type="text" id="videoCategoryName" required>
+          </div>
+          <div class="form-group">
+            <label for="videoCategoryParent">父级分类(可选):</label>
+            <div id="videoCategoryParentWrapper" class="custom-dropdown-wrapper"></div>
+            <input type="hidden" id="videoCategoryParent" value="0">
+          </div>
+          <div class="form-group">
+            <label for="videoCategorySortOrder">排序值(可选):</label>
+            <input type="number" id="videoCategorySortOrder" placeholder="默认9999">
+          </div>
+          <div class="flex flex-row justify-end gap-3 mt-6">
+            <button type="button" id="cancelVideoCategoryBtn"
+              class="w-24 h-10 m-0 flex items-center justify-center bg-gray-100 text-gray-600 rounded hover:bg-gray-200 text-sm font-medium transition-colors">取消</button>
+            <button type="submit"
+              class="w-24 h-10 !mt-0 m-0 flex items-center justify-center bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium shadow-sm transition-colors">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 视频模态框 -->
+    <div id="videoModalAdmin" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="modal-close" id="closeVideoModalAdmin">×</span>
+        <h2 id="videoModalAdminTitle">新增视频</h2>
+        <form id="videoForm">
+          <input type="hidden" id="videoId">
+          <div class="form-group">
+            <label for="videoTitle">标题:</label>
+            <input type="text" id="videoTitle" required>
+          </div>
+          <div class="form-group">
+            <label for="videoUrl">视频地址:</label>
+            <input type="text" id="videoUrl" required placeholder="https://www.bilibili.com/video/BV...">
+          </div>
+          <div class="form-group">
+            <label for="videoCover">封面(可选):</label>
+            <input type="text" id="videoCover" placeholder="https://example.com/cover.jpg">
+          </div>
+          <div class="form-group">
+            <label for="videoDesc">描述(可选):</label>
+            <input type="text" id="videoDesc">
+          </div>
+          <div class="form-group">
+            <label for="videoCategory">分类:</label>
+            <div id="videoCategoryWrapper" class="custom-dropdown-wrapper w-full"></div>
+            <input type="hidden" id="videoCategory" required>
+          </div>
+          <div class="form-group">
+            <label for="videoPlatform">平台:</label>
+            <select id="videoPlatform" class="form-input">
+              <option value="bilibili">bilibili</option>
+              <option value="youtube">YouTube</option>
+              <option value="link">普通链接</option>
+            </select>
+          </div>
+          <div id="bilibiliFields" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div class="form-group"><label for="videoBvid">BVID:</label><input type="text" id="videoBvid" placeholder="BV..."></div>
+            <div class="form-group"><label for="videoAid">AID:</label><input type="text" id="videoAid"></div>
+            <div class="form-group"><label for="videoCid">CID:</label><input type="text" id="videoCid"></div>
+            <div class="form-group"><label for="videoPage">P:</label><input type="number" id="videoPage" value="1" min="1"></div>
+          </div>
+          <div id="youtubeFields" class="form-group hidden">
+            <label for="videoYoutubeId">YouTube Video ID:</label>
+            <input type="text" id="videoYoutubeId" placeholder="dQw4w9WgXcQ">
+          </div>
+          <div class="form-group">
+            <label for="videoSortOrder">排序值(可选):</label>
+            <input type="number" id="videoSortOrder" placeholder="默认9999">
+          </div>
+          <div class="flex flex-row justify-end gap-3 mt-6">
+            <button type="button" id="cancelVideoBtn"
+              class="w-24 h-10 m-0 flex items-center justify-center bg-gray-100 text-gray-600 rounded hover:bg-gray-200 text-sm font-medium transition-colors">取消</button>
+            <button type="submit"
+              class="w-24 h-10 !mt-0 m-0 flex items-center justify-center bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium shadow-sm transition-colors">保存</button>
           </div>
         </form>
       </div>
@@ -1316,6 +1418,8 @@
         <button class="tab-button active" data-tab="config">书签列表</button>
         <button class="tab-button" data-tab="pending">待审核列表</button>
         <button class="tab-button" data-tab="categories">分类列表</button>
+        <button class="tab-button" data-tab="video-categories">视频分类</button>
+        <button class="tab-button" data-tab="videos">视频列表</button>
       </div>
 
       <div id="config" class="tab-content active">
@@ -1414,6 +1518,61 @@
               <option value="50">50条/页</option>
               <option value="100">100条/页</option>
               <option value="10000" selected>全部</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="video-categories" class="tab-content">
+        <div class="grid-wrapper">
+          <div class="category-toolbar mb-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+              <button id="videoCategoryBackBtn"
+                class="hidden text-sm text-gray-600 hover:text-primary-600 flex items-center bg-white border border-gray-300 px-3 py-1 rounded shadow-sm transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                返回上级
+              </button>
+              <span id="videoCategoryBreadcrumb" class="text-gray-700 font-medium ml-2">顶级视频分类</span>
+            </div>
+          </div>
+          <div id="videoCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <!-- data render by js -->
+          </div>
+        </div>
+      </div>
+
+      <div id="videos" class="tab-content">
+        <div class="grid-wrapper">
+          <div class="bookmark-toolbar mb-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
+              <input id="videoKeyword" type="search" placeholder="搜索视频标题、地址、描述"
+                class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-shadow h-[42px]">
+              <div id="videoCategoryFilterWrapper" class="custom-dropdown-wrapper min-w-[180px]"></div>
+              <input type="hidden" id="videoCategoryFilter" value="">
+            </div>
+            <p class="text-gray-500 text-sm">在这里管理前台视频中心的视频内容</p>
+          </div>
+          <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <!-- data render by js -->
+          </div>
+          <div class="pagination mt-6 flex justify-center items-center gap-4">
+            <button id="videoPrevPage" disabled
+              class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">上一页</button>
+            <span class="text-gray-600">
+              <span id="videoCurrentPage" class="font-medium">1</span> / <span id="videoTotalPages">1</span>
+            </span>
+            <button id="videoNextPage" disabled
+              class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">下一页</button>
+            <select id="videoPageSizeSelect"
+              class="ml-2 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white">
+              <option value="20">20条/页</option>
+              <option value="50" selected>50条/页</option>
+              <option value="100">100条/页</option>
+              <option value="200">200条/页</option>
             </select>
           </div>
         </div>
@@ -1533,30 +1692,31 @@
     </div>
   </div>
 
-  <script src="/js/admin-shared.js?v=bb97f086"></script>
-  <script src="/js/admin-cache.js?v=7b8faa7b"></script>
-  <script src="/js/admin-bookmark-list.js?v=63a1380b"></script>
-  <script src="/js/admin-pending.js?v=2482c2ea"></script>
-  <script src="/js/admin-tabs.js?v=fd9a0d73"></script>
-  <script src="/js/admin-bookmark-privacy.js?v=306f5fdb"></script>
-  <script src="/js/admin.js?v=39f7ce60"></script>
-  <script src="/js/admin-categories.js?v=aa436f47"></script>
-  <script src="/js/admin-bookmarks.js?v=050f96b1"></script>
-  <script src="/js/admin-batch.js?v=30d922a5"></script>
-  <script src="/js/admin-settings-defaults.js?v=7d2af695"></script>
-  <script src="/js/admin-settings-form.js?v=11dec945"></script>
-  <script src="/js/admin-settings-core.js?v=79cca7f7"></script>
-  <script src="/js/admin-settings-preview-shared.js?v=3d0c2bf4"></script>
-  <script src="/js/admin-settings-preview-data.js?v=3eddb596"></script>
-  <script src="/js/admin-settings-preview-nav.js?v=104621ea"></script>
-  <script src="/js/admin-settings-preview-animation.js?v=41e847dd"></script>
-  <script src="/js/admin-settings-preview-render.js?v=9fcb5adb"></script>
-  <script src="/js/admin-settings-preview-controls.js?v=92006133"></script>
-  <script src="/js/admin-settings-preview.js?v=909bf2a1"></script>
-  <script src="/js/admin-settings-wallpaper.js?v=6121d0fc"></script>
-  <script src="/js/admin-settings-ai.js?v=96643057"></script>
-  <script src="/js/admin-settings.js?v=3d60c17b"></script>
-  <script src="/js/admin-import-export.js?v=0ee9e0b0"></script>
+  <script src="/js/admin-shared.js?v=69650060"></script>
+  <script src="/js/admin-cache.js?v=ae06819c"></script>
+  <script src="/js/admin-bookmark-list.js?v=96ca2940"></script>
+  <script src="/js/admin-pending.js?v=b6ae86b9"></script>
+  <script src="/js/admin-tabs.js?v=6565282c"></script>
+  <script src="/js/admin-bookmark-privacy.js?v=cb0fbe1c"></script>
+  <script src="/js/admin-videos.js"></script>
+  <script src="/js/admin.js?v=e7ce012a"></script>
+  <script src="/js/admin-categories.js?v=6ee07657"></script>
+  <script src="/js/admin-bookmarks.js?v=2c52bc54"></script>
+  <script src="/js/admin-batch.js?v=231f596e"></script>
+  <script src="/js/admin-settings-defaults.js?v=8a28c806"></script>
+  <script src="/js/admin-settings-form.js?v=2085ccf8"></script>
+  <script src="/js/admin-settings-core.js?v=8a1064f3"></script>
+  <script src="/js/admin-settings-preview-shared.js?v=f036607b"></script>
+  <script src="/js/admin-settings-preview-data.js?v=649b33cc"></script>
+  <script src="/js/admin-settings-preview-nav.js?v=c0059ebf"></script>
+  <script src="/js/admin-settings-preview-animation.js?v=d2c352cf"></script>
+  <script src="/js/admin-settings-preview-render.js?v=cddbe393"></script>
+  <script src="/js/admin-settings-preview-controls.js?v=92b225dc"></script>
+  <script src="/js/admin-settings-preview.js?v=20153112"></script>
+  <script src="/js/admin-settings-wallpaper.js?v=8f9a4415"></script>
+  <script src="/js/admin-settings-ai.js?v=a29b4719"></script>
+  <script src="/js/admin-settings.js?v=29f90d46"></script>
+  <script src="/js/admin-import-export.js?v=15b447db"></script>
 </body>
 
 </html>

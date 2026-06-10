@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>视频中心</title>
+  <link rel="icon" href="/favicon.svg?v=148aafdf" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css?v=bf15c1b3">
+  <link rel="stylesheet" href="/css/tailwind.min.css?v=94e9f2cc">
+  <script>
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
+</head>
+<body class="bg-secondary-50 font-sans text-gray-800 dark:bg-gray-950 dark:text-gray-100">
+  <div class="min-h-screen">
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
+        <a href="/" class="inline-flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" title="返回首页">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h4m4 0h4a1 1 0 001-1V10" /></svg>
+          首页
+        </a>
+        <div class="h-5 w-px bg-gray-200 dark:bg-gray-700"></div>
+        <div class="flex items-center gap-2 font-semibold text-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+          视频中心
+        </div>
+        <div class="flex-1"></div>
+        <button id="videoModeToggle" class="px-3 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 text-sm transition-colors">播放器模式</button>
+        <button id="themeToggleBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="切换主题">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <section id="videoGridMode">
+        <div class="mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">视频中心</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">按分类浏览视频，点击卡片即可播放</p>
+          </div>
+          <div class="sm:ml-auto w-full sm:w-80">
+            <input id="videoSearchInput" type="search" placeholder="搜索视频标题、描述、分类..." class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-300">
+          </div>
+        </div>
+        <div id="videoContent" class="space-y-8"></div>
+      </section>
+
+      <section id="videoPlayerMode" class="hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+          <div class="space-y-4">
+            <div id="videoPlayerBox" class="aspect-video bg-black rounded-2xl overflow-hidden shadow-xl flex items-center justify-center text-gray-400">
+              请选择右侧视频播放
+            </div>
+            <div>
+              <h2 id="selectedVideoTitle" class="text-xl font-semibold text-gray-900 dark:text-gray-100">未选择视频</h2>
+              <p id="selectedVideoDesc" class="text-sm text-gray-500 dark:text-gray-400 mt-2"></p>
+            </div>
+          </div>
+          <aside class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 max-h-[calc(100vh-7rem)] overflow-y-auto">
+            <h3 class="font-semibold mb-3">播放列表</h3>
+            <div id="videoPlaylist" class="space-y-2"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="videoModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4">
+    <div class="w-full max-w-5xl bg-zinc-950 rounded-2xl overflow-hidden shadow-2xl">
+      <div class="flex justify-end p-2 bg-zinc-900">
+        <button id="closeVideoModal" class="text-zinc-300 hover:text-white px-3 py-1 rounded">关闭</button>
+      </div>
+      <div id="videoModalPlayer" class="aspect-video bg-black"></div>
+      <div class="p-4 bg-zinc-900">
+        <h3 id="videoModalTitle" class="text-white font-medium"></h3>
+        <p id="videoModalDesc" class="text-zinc-400 text-sm mt-2"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/video-center.js"></script>
+</body>
+</html>

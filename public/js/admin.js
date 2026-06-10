@@ -4,6 +4,7 @@
     window.AdminPending?.init?.();
     window.AdminTabs?.init?.();
     window.AdminBookmarkPrivacy?.init?.();
+    window.AdminVideos?.init?.();
 
     window.loadGlobalCategories?.()
       ?.catch?.(err => console.error('Failed to load categories:', err));
