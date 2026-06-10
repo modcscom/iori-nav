@@ -331,8 +331,46 @@
     return null;
   }
 
+  // 从 Bilibili API 获取视频信息
+  async function fetchBilibiliVideoInfo(bvid) {
+    try {
+      const res = await fetch(`https://api.bilibili.com/x/web-interface/view?bvid=${encodeURIComponent(bvid)}`);
+      const data = await res.json();
+      if (data.code === 0 && data.data) {
+        return {
+          title: data.data.title,
+          desc: data.data.desc,
+          cover: data.data.pic,
+          aid: String(data.data.aid || ''),
+          cid: String(data.data.cid || ''),
+        };
+      }
+    } catch (e) {
+      console.warn('获取 Bilibili 视频信息失败:', e);
+    }
+    return null;
+  }
+
+  // 从 YouTube oEmbed API 获取视频信息
+  async function fetchYoutubeVideoInfo(videoId) {
+    try {
+      const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}&format=json`);
+      if (res.ok) {
+        const data = await res.json();
+        return {
+          title: data.title,
+          desc: '',
+          cover: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+        };
+      }
+    } catch (e) {
+      console.warn('获取 YouTube 视频信息失败:', e);
+    }
+    return null;
+  }
+
   // 自动解析视频 URL 并填充相关字段
-  function autoParseVideoUrl() {
+  async function autoParseVideoUrl() {
     const url = els.videoUrl?.value?.trim();
     if (!url) return;
 
@@ -344,6 +382,18 @@
       if (bilibiliInfo.aid) els.videoAid.value = bilibiliInfo.aid;
       els.videoPage.value = bilibiliInfo.page || 1;
       updatePlatformFields();
+
+      // 获取视频标题和封面
+      if (bilibiliInfo.bvid && !els.videoTitle.value.trim()) {
+        const info = await fetchBilibiliVideoInfo(bilibiliInfo.bvid);
+        if (info) {
+          els.videoTitle.value = info.title || '';
+          els.videoDesc.value = info.desc || '';
+          els.videoCover.value = info.cover || '';
+          if (info.aid) els.videoAid.value = info.aid;
+          if (info.cid) els.videoCid.value = info.cid;
+        }
+      }
       return;
     }
 
@@ -353,6 +403,16 @@
       els.videoPlatform.value = 'youtube';
       els.videoYoutubeId.value = youtubeInfo.youtubeId;
       updatePlatformFields();
+
+      // 获取视频标题和封面
+      if (youtubeInfo.youtubeId && !els.videoTitle.value.trim()) {
+        const info = await fetchYoutubeVideoInfo(youtubeInfo.youtubeId);
+        if (info) {
+          els.videoTitle.value = info.title || '';
+          els.videoDesc.value = info.desc || '';
+          els.videoCover.value = info.cover || '';
+        }
+      }
       return;
     }
 
