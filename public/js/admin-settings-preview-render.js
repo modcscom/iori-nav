@@ -50,6 +50,7 @@
       siteName: shared.getPreviewInputValueOrDefault(refs.homeSiteNameInput, current.home_site_name, '灰色轨迹'),
       siteDescription: shared.getPreviewInputValueOrDefault(refs.homeSiteDescriptionInput, current.home_site_description, '一个优雅、快速、易于部署的书签收藏与分享平台'),
       footerText: shared.getPreviewInputValueOrDefault(refs.homeFooterTextInput, current.home_footer_text, '曾梦想仗剑走天涯'),
+      icpNumber: shared.getPreviewInputValue(refs.homeIcpNumberInput, current.home_icp_number || ''),
       hideTitle: !!refs.hideTitleSwitch?.checked,
       hideSubtitle: !!refs.hideSubtitleSwitch?.checked,
       hideStats: !!refs.hideStatsSwitch?.checked,
@@ -246,6 +247,9 @@
     const cardGrid = root.querySelector('[data-preview-role="cardGrid"]');
     const footerYear = root.querySelector('[data-preview-role="footerYear"]');
     const footerText = root.querySelector('[data-preview-role="footerText"]');
+    const icpLink = root.querySelector('[data-preview-role="icpLink"]');
+    const icpNumber = root.querySelector('[data-preview-role="icpNumber"]');
+    const icpSeparator = root.querySelector('[data-preview-role="icpSeparator"]');
 
     root.classList.toggle('is-horizontal', isHorizontal);
     root.classList.toggle('has-wallpaper', !!settings.wallpaper);
@@ -315,6 +319,9 @@
     }
     if (footerYear) footerYear.textContent = String(new Date().getFullYear());
     if (footerText) footerText.textContent = settings.footerText;
+    if (icpNumber) icpNumber.textContent = settings.icpNumber;
+    if (icpLink) icpLink.style.display = settings.icpNumber ? '' : 'none';
+    if (icpSeparator) icpSeparator.style.display = settings.icpNumber ? '' : 'none';
 
     renderPreviewCards(cardGrid, settings, previewState);
     if (

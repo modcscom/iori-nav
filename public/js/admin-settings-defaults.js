@@ -39,6 +39,7 @@
     'home_site_name',
     'home_site_description',
     'home_footer_text',
+    'home_icp_number',
     'home_default_category',
     'home_category_position',
     'home_category_flow',
