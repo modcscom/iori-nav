@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/css/admin-settings-modal.css?v=60f9d7cf" />
   <link rel="stylesheet" href="/css/admin-card-preview.css?v=0d44f94c" />
   <link rel="stylesheet" href="/css/admin-feedback.css?v=7f73bd85" />
-  <link rel="stylesheet" href="/css/admin-dropdown.css?v=a8270a59" />
+  <link rel="stylesheet" href="/css/admin-dropdown.css?v=a446b34e" />
   <link rel="stylesheet" href="/css/tailwind.min.css?v=deed2e78">
 </head>
 
@@ -508,11 +508,11 @@
               <option value="link">普通链接</option>
             </select>
           </div>
-          <div id="bilibiliFields" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <div class="form-group"><label for="videoBvid">BVID:</label><input type="text" id="videoBvid" placeholder="BV..."></div>
-            <div class="form-group"><label for="videoAid">AID:</label><input type="text" id="videoAid"></div>
-            <div class="form-group"><label for="videoCid">CID:</label><input type="text" id="videoCid"></div>
-            <div class="form-group"><label for="videoPage">P:</label><input type="number" id="videoPage" value="1" min="1"></div>
+          <div id="bilibiliFields" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="form-group"><label for="videoBvid">BVID:</label><input type="text" id="videoBvid" placeholder="BV..." class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
+            <div class="form-group"><label for="videoAid">AID:</label><input type="text" id="videoAid" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
+            <div class="form-group"><label for="videoCid">CID:</label><input type="text" id="videoCid" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
+            <div class="form-group"><label for="videoPage">P:</label><input type="number" id="videoPage" value="1" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
           </div>
           <div id="youtubeFields" class="form-group hidden">
             <label for="videoYoutubeId">YouTube Video ID:</label>
