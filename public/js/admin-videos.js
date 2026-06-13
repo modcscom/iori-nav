@@ -339,19 +339,13 @@
     return null;
   }
 
-  // 从 Bilibili API 获取视频信息
+  // 从后端代理获取 Bilibili 视频信息（解决 CORS 问题）
   async function fetchBilibiliVideoInfo(bvid) {
     try {
-      const res = await fetch(`https://api.bilibili.com/x/web-interface/view?bvid=${encodeURIComponent(bvid)}`);
-      const data = await res.json();
-      if (data.code === 0 && data.data) {
-        return {
-          title: data.data.title,
-          desc: data.data.desc,
-          cover: data.data.pic,
-          aid: String(data.data.aid || ''),
-          cid: String(data.data.cid || ''),
-        };
+      const res = await fetch(`/api/videos/bilibili-info?bvid=${encodeURIComponent(bvid)}`);
+      const result = await res.json();
+      if (result.code === 200 && result.data) {
+        return result.data;
       }
     } catch (e) {
       console.warn('获取 Bilibili 视频信息失败:', e);
@@ -400,6 +394,15 @@
           els.videoCover.value = info.cover || '';
           if (info.aid) els.videoAid.value = info.aid;
           if (info.cid) els.videoCid.value = info.cid;
+          console.log('✅ Bilibili 视频信息获取成功:', info.title);
+        } else {
+          // API 调用失败，提示用户手动填写
+          console.warn('⚠️ 无法自动获取视频标题，请手动填写');
+          // 尝试从 URL 中提取可能的标题信息
+          const urlTitleMatch = url.match(/[?&]title=([^&]+)/i);
+          if (urlTitleMatch) {
+            els.videoTitle.value = decodeURIComponent(urlTitleMatch[1]);
+          }
         }
       }
       return;
