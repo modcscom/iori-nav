@@ -259,7 +259,15 @@
     openModal(els.videoCategoryModal);
   }
 
-  function openVideoForm(video = null) {
+  async function openVideoForm(video = null) {
+    // 确保视频分类数据已加载
+    if (state.categories.length === 0) {
+      try {
+        await loadVideoCategories();
+      } catch (e) {
+        console.error('加载视频分类失败:', e);
+      }
+    }
     els.videoForm.reset();
     els.videoId.value = video?.id || '';
     els.videoTitle.value = video?.title || '';

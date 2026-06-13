@@ -508,11 +508,15 @@
               <option value="link">普通链接</option>
             </select>
           </div>
-          <div id="bilibiliFields" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="form-group"><label for="videoBvid">BVID:</label><input type="text" id="videoBvid" placeholder="BV..." class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
-            <div class="form-group"><label for="videoAid">AID:</label><input type="text" id="videoAid" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
-            <div class="form-group"><label for="videoCid">CID:</label><input type="text" id="videoCid" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
-            <div class="form-group"><label for="videoPage">P:</label><input type="number" id="videoPage" value="1" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"></div>
+          <div id="bilibiliFields" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-group"><label for="videoBvid">BVID:</label><input type="text" id="videoBvid" placeholder="BV..." class="w-full px-3 py-2 border border-gray-300 rounded-md"></div>
+              <div class="form-group"><label for="videoAid">AID:</label><input type="text" id="videoAid" placeholder="可选" class="w-full px-3 py-2 border border-gray-300 rounded-md"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-group"><label for="videoCid">CID:</label><input type="text" id="videoCid" placeholder="可选" class="w-full px-3 py-2 border border-gray-300 rounded-md"></div>
+              <div class="form-group"><label for="videoPage">P:</label><input type="number" id="videoPage" value="1" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md"></div>
+            </div>
           </div>
           <div id="youtubeFields" class="form-group hidden">
             <label for="videoYoutubeId">YouTube Video ID:</label>
@@ -1701,7 +1705,7 @@
   <script src="/js/admin-pending.js?v=b6ae86b9"></script>
   <script src="/js/admin-tabs.js?v=6565282c"></script>
   <script src="/js/admin-bookmark-privacy.js?v=cb0fbe1c"></script>
-  <script src="/js/admin-videos.js?v=8a0f3c20"></script>
+  <script src="/js/admin-videos.js?v=15e12388"></script>
   <script src="/js/admin.js?v=e7ce012a"></script>
   <script src="/js/admin-categories.js?v=6ee07657"></script>
   <script src="/js/admin-bookmarks.js?v=2c52bc54"></script>
