@@ -2,6 +2,31 @@ import { jsonResponse, errorResponse } from '../../_middleware';
 
 const DOUYIN_API_BASE = 'https://douyin-vd.vercel.app/api/hello';
 
+async function resolveRedirectUrl(url) {
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'manual',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://www.douyin.com/',
+        'Origin': 'https://www.douyin.com',
+      },
+    });
+
+    if (response.status === 302 || response.status === 301 || response.status === 303) {
+      const location = response.headers.get('Location');
+      if (location) {
+        return location;
+      }
+    }
+    return url;
+  } catch (e) {
+    console.warn('Resolve redirect failed:', e);
+    return url;
+  }
+}
+
 export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -12,7 +37,6 @@ export async function onRequestGet(context) {
   }
 
   try {
-    // 调用抖音解析 API，获取 JSON 数据（有 data 参数）
     const apiUrl = `${DOUYIN_API_BASE}?data&url=${encodeURIComponent(videoUrl)}`;
     const response = await fetch(apiUrl, {
       headers: {
@@ -28,30 +52,25 @@ export async function onRequestGet(context) {
 
     const data = await response.json();
 
-    // 返回结构化数据
+    let finalVideoUrl = data.video_url || null;
+    if (finalVideoUrl) {
+      finalVideoUrl = await resolveRedirectUrl(finalVideoUrl);
+    }
+
     return jsonResponse({
       code: 200,
       data: {
-        // 标题：优先使用 title，其次使用 desc
         title: data.title || data.desc || null,
-        // 描述
         desc: data.desc || null,
-        // 视频直链
-        video_url: data.video_url || null,
-        // 作者昵称
+        video_url: finalVideoUrl,
         nickname: data.nickname || null,
-        // 作者签名
         signature: data.signature || null,
-        // 统计数据
         comment_count: data.comment_count || 0,
         digg_count: data.digg_count || 0,
         share_count: data.share_count || 0,
         collect_count: data.collect_count || 0,
-        // 创建时间
         create_time: data.create_time || null,
-        // 类型
         type: data.type || null,
-        // 图片列表（图文视频）
         image_url_list: data.image_url_list || null,
       },
     });
