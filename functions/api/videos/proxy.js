@@ -22,10 +22,19 @@ export async function onRequestGet(context) {
         'Referer': 'https://www.douyin.com/',
         'Origin': 'https://www.douyin.com',
       },
+      redirect: 'manual',
     });
 
-    if (!response.ok) {
-      return errorResponse(`Video fetch failed: ${response.status}`, 500);
+    if (response.status === 302 || response.status === 301 || response.status === 303) {
+      const location = response.headers.get('Location');
+      if (location) {
+        const headers = new Headers();
+        headers.set('Location', location);
+        headers.set('Access-Control-Allow-Origin', '*');
+        headers.set('Access-Control-Allow-Methods', 'GET, HEAD');
+        headers.set('Access-Control-Allow-Headers', 'Range');
+        return new Response(null, { status: 302, headers });
+      }
     }
 
     const headers = new Headers(response.headers);
