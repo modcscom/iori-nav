@@ -28,14 +28,16 @@ async function runIncrementalMigrations(env) {
     env.NAV_DB.prepare('CREATE INDEX IF NOT EXISTS idx_videos_platform ON videos(platform)')
   ]);
 
-  const [sitesColumns, categoryColumns, pendingColumns] = await Promise.all([
+  const [sitesColumns, categoryColumns, pendingColumns, videosColumns] = await Promise.all([
     env.NAV_DB.prepare('PRAGMA table_info(sites)').all(),
     env.NAV_DB.prepare('PRAGMA table_info(category)').all(),
     env.NAV_DB.prepare('PRAGMA table_info(pending_sites)').all(),
+    env.NAV_DB.prepare('PRAGMA table_info(videos)').all(),
   ]);
   const sitesCols = new Set((sitesColumns.results || []).map(column => column.name));
   const categoryCols = new Set((categoryColumns.results || []).map(column => column.name));
   const pendingCols = new Set((pendingColumns.results || []).map(column => column.name));
+  const videosCols = new Set((videosColumns.results || []).map(column => column.name));
 
   const alterStatements = [];
   const sitesMissingCatalogName = !sitesCols.has('catelog_name');
@@ -55,6 +57,9 @@ async function runIncrementalMigrations(env) {
   }
   if (!categoryCols.has('parent_id')) {
     alterStatements.push(env.NAV_DB.prepare('ALTER TABLE category ADD COLUMN parent_id INTEGER DEFAULT 0'));
+  }
+  if (!videosCols.has('douyin_id')) {
+    alterStatements.push(env.NAV_DB.prepare('ALTER TABLE videos ADD COLUMN douyin_id TEXT'));
   }
 
   for (const statement of alterStatements) {

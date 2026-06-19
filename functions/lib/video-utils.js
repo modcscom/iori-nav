@@ -2,7 +2,7 @@ import { normalizeSortOrder } from './utils';
 
 export function normalizeVideoPlatform(value) {
   const platform = String(value || 'link').trim().toLowerCase();
-  return ['bilibili', 'youtube', 'link'].includes(platform) ? platform : 'link';
+  return ['bilibili', 'youtube', 'douyin', 'link'].includes(platform) ? platform : 'link';
 }
 
 export function normalizeVideoPage(value) {

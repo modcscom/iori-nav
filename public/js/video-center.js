@@ -52,6 +52,12 @@
       return `<iframe src="${src}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     }
 
+    // 抖音播放 - 使用 douyin_id
+    if (video.platform === 'douyin' && video.douyin_id) {
+      const src = `https://www.douyin.com/embed/${encodeURIComponent(video.douyin_id)}`;
+      return `<iframe src="${src}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+    }
+
     // 普通链接 - 尝试用 iframe 打开
     const safeUrl = normalizeUrl(video.url);
     if (safeUrl) {
@@ -74,7 +80,9 @@
       ? '<span class="absolute top-3 left-3 px-2 py-1 rounded-md bg-pink-500/90 text-white text-xs">bilibili</span>'
       : video.platform === 'youtube'
         ? '<span class="absolute top-3 left-3 px-2 py-1 rounded-md bg-red-600/90 text-white text-xs">YouTube</span>'
-        : '<span class="absolute top-3 left-3 px-2 py-1 rounded-md bg-slate-700/90 text-white text-xs">链接</span>';
+        : video.platform === 'douyin'
+          ? '<span class="absolute top-3 left-3 px-2 py-1 rounded-md bg-blue-500/90 text-white text-xs">抖音</span>'
+          : '<span class="absolute top-3 left-3 px-2 py-1 rounded-md bg-slate-700/90 text-white text-xs">链接</span>';
 
     return `
       <button class="video-card group text-left w-full overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all" data-video-id="${video.id}">

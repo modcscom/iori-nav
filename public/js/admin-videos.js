@@ -78,6 +78,7 @@
       cid: els.videoCid.value.trim(),
       page: Number(els.videoPage.value || 1),
       youtube_id: els.videoYoutubeId.value.trim(),
+      douyin_id: els.videoDouyinId.value.trim(),
       sort_order: els.videoSortOrder.value === '' ? undefined : Number(els.videoSortOrder.value),
     };
   }
@@ -339,6 +340,22 @@
     return null;
   }
 
+  // 解析抖音 URL，提取视频 ID
+  function parseDouyinUrl(url) {
+    if (!url) return null;
+    const trimmed = String(url).trim();
+
+    // 匹配 v.douyin.com/xxx 格式
+    const douyinMatch = trimmed.match(/v\.douyin\.com\/([\w-]+)/i);
+    if (douyinMatch) return { douyinId: douyinMatch[1], platform: 'douyin' };
+
+    // 匹配长链接格式
+    const longMatch = trimmed.match(/douyin\.com\/video\/(\d+)/i);
+    if (longMatch) return { douyinId: longMatch[1], platform: 'douyin' };
+
+    return null;
+  }
+
   // 从后端代理获取 Bilibili 视频信息（解决 CORS 问题）
   async function fetchBilibiliVideoInfo(bvid) {
     try {
@@ -367,6 +384,20 @@
       }
     } catch (e) {
       console.warn('获取 YouTube 视频信息失败:', e);
+    }
+    return null;
+  }
+
+  // 从后端代理获取抖音视频信息
+  async function fetchDouyinVideoInfo(url) {
+    try {
+      const res = await fetch(`/api/videos/douyin-info?url=${encodeURIComponent(url)}`);
+      const result = await res.json();
+      if (result.code === 200 && result.data) {
+        return result.data;
+      }
+    } catch (e) {
+      console.warn('获取抖音视频信息失败:', e);
     }
     return null;
   }
@@ -422,6 +453,30 @@
           els.videoTitle.value = info.title || '';
           els.videoDesc.value = info.desc || '';
           els.videoCover.value = info.cover || '';
+        }
+      }
+      return;
+    }
+
+    // 尝试解析抖音
+    const douyinInfo = parseDouyinUrl(url);
+    if (douyinInfo) {
+      els.videoPlatform.value = 'douyin';
+      els.videoDouyinId.value = douyinInfo.douyinId;
+      updatePlatformFields();
+
+      // 获取视频信息
+      if (!els.videoTitle.value.trim()) {
+        const info = await fetchDouyinVideoInfo(url);
+        if (info) {
+          els.videoTitle.value = info.title || info.desc || '';
+          els.videoDesc.value = info.desc || '';
+          if (info.video_url) {
+            // 抖音直链可能需要特殊处理，暂时保存原始 URL
+          }
+          console.log('✅ 抖音视频信息获取成功:', info.title || info.desc);
+        } else {
+          console.warn('⚠️ 无法自动获取视频标题，请手动填写');
         }
       }
       return;
@@ -538,6 +593,7 @@
       cancelVideoBtn: $('cancelVideoBtn'),
       bilibiliFields: $('bilibiliFields'),
       youtubeFields: $('youtubeFields'),
+      douyinFields: $('douyinFields'),
       videoCategoryGrid: $('videoCategoryGrid'),
       videoGrid: $('videoGrid'),
       videoKeyword: $('videoKeyword'),
