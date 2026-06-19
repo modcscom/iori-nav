@@ -1,4 +1,4 @@
-import { jsonResponse, errorResponse } from '../../../_middleware';
+import { jsonResponse, errorResponse } from '../../_middleware';
 
 const DOUYIN_API_BASE = 'https://douyin-vd.vercel.app/api/hello';
 
