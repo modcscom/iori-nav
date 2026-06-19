@@ -4,6 +4,7 @@
     flatVideos: [],
     selectedVideo: null,
     isPlayerMode: false,
+    expanded: {},
   };
 
   const contentEl = document.getElementById('videoContent');
@@ -146,18 +147,33 @@
     });
   }
 
+  function getExpandedKey(categoryId) {
+    return `playlist_expanded_${categoryId}`;
+  }
+
+  function isExpanded(categoryId) {
+    const key = getExpandedKey(categoryId);
+    if (!(key in state.expanded)) {
+      state.expanded[key] = false;
+    }
+    return state.expanded[key];
+  }
+
+  function setExpanded(categoryId, value) {
+    state.expanded[getExpandedKey(categoryId)] = value;
+  }
+
   function renderPlaylist() {
-    playlistEl.innerHTML = state.tree.map(category => {
-      const directItems = (category.videos || []).map(video => renderPlaylistItem(video)).join('');
-      const childItems = (category.children || []).map(child => renderPlaylistGroup(child)).join('');
-      if (!directItems && !childItems) return '';
-      return `
-        <div class="space-y-2">
-          <div class="font-medium text-sm text-gray-900 dark:text-gray-100">${escapeHTML(category.name)}</div>
-          <div class="space-y-1">${directItems}${childItems}</div>
-        </div>
-      `;
-    }).join('');
+    playlistEl.innerHTML = state.tree.map(category => renderPlaylistCategory(category, 0)).filter(Boolean).join('');
+
+    playlistEl.querySelectorAll('[data-playlist-toggle]').forEach(button => {
+      button.addEventListener('click', function (event) {
+        event.stopPropagation();
+        const id = String(this.dataset.playlistToggle);
+        setExpanded(id, !isExpanded(id));
+        renderPlaylist();
+      });
+    });
 
     playlistEl.querySelectorAll('[data-play-video-id]').forEach(button => {
       button.addEventListener('click', function () {
@@ -167,15 +183,34 @@
     });
   }
 
-  function renderPlaylistGroup(category) {
-    const items = (category.videos || []).map(video => renderPlaylistItem(video)).join('');
-    const children = (category.children || []).map(child => renderPlaylistGroup(child)).join('');
-    if (!items && !children) return '';
+  function renderPlaylistCategory(category, depth) {
+    const expanded = isExpanded(category.id);
+    const directItems = (category.videos || []).map(video => renderPlaylistItem(video)).join('');
+    const childItems = (category.children || []).map(child => renderPlaylistCategory(child, depth + 1)).filter(Boolean).join('');
+    if (!directItems && !childItems) return '';
+
+    const hasItems = !!(directItems || childItems);
+    const paddingLeft = depth > 0 ? 'ml-3 pl-3 border-l border-gray-200 dark:border-gray-800' : '';
+
+    const chevron = hasItems
+      ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform ${expanded ? 'rotate-90' : ''}" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>`
+      : '';
+
+    const itemsHtml = expanded
+      ? `<div class="space-y-1 mt-1 ${paddingLeft}">${directItems}${childItems}</div>`
+      : '';
+
+    const headerClass = depth === 0
+      ? 'font-medium text-sm text-gray-900 dark:text-gray-100'
+      : 'text-xs text-gray-500 dark:text-gray-400';
+
     return `
-      <div class="ml-3 pl-3 border-l border-gray-200 dark:border-gray-800 space-y-1">
-        <div class="text-xs text-gray-500 dark:text-gray-400">${escapeHTML(category.name)}</div>
-        ${items}
-        ${children}
+      <div class="space-y-1">
+        <button type="button" class="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${headerClass}" data-playlist-toggle="${category.id}">
+          <span>${escapeHTML(category.name)}</span>
+          ${chevron}
+        </button>
+        ${itemsHtml}
       </div>
     `;
   }
@@ -194,6 +229,24 @@
     playerBoxEl.innerHTML = getVideoEmbedHtml(video);
     selectedTitleEl.textContent = video.title || '未命名视频';
     selectedDescEl.textContent = video.desc || '';
+
+    const expandCategoryAndParents = (categories, targetCategoryId) => {
+      for (const category of categories) {
+        if (String(category.id) === String(targetCategoryId)) {
+          setExpanded(category.id, true);
+          return true;
+        }
+        if (category.children?.length) {
+          if (expandCategoryAndParents(category.children, targetCategoryId)) {
+            setExpanded(category.id, true);
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    expandCategoryAndParents(state.tree, video.category_id);
+
     renderPlaylist();
   }
 
