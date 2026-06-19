@@ -52,10 +52,18 @@
       return `<iframe src="${src}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    // 抖音播放 - 使用 douyin_id
-    if (video.platform === 'douyin' && video.douyin_id) {
-      const src = `https://www.douyin.com/embed/${encodeURIComponent(video.douyin_id)}`;
-      return `<iframe src="${src}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+    // 抖音播放 - 使用视频直链
+    if (video.platform === 'douyin') {
+      // 优先使用解析后的视频直链
+      if (video.video_url) {
+        const safeUrl = normalizeUrl(video.video_url);
+        return `<video src="${escapeHTML(safeUrl)}" class="w-full h-full" controls autoplay></video>`;
+      }
+      // 备用：使用原始链接尝试 iframe 嵌入
+      const safeUrl = normalizeUrl(video.url);
+      if (safeUrl) {
+        return `<iframe src="${escapeHTML(safeUrl)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
+      }
     }
 
     // 普通链接 - 尝试用 iframe 打开

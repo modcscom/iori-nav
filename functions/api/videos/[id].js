@@ -29,6 +29,8 @@ function normalizeVideoPayload(body) {
       cid: String(body.cid || '').trim() || null,
       page: normalizeVideoPage(body.page),
       youtubeId: String(body.youtube_id || body.youtubeId || '').trim() || null,
+      douyinId: String(body.douyin_id || body.douyinId || '').trim() || null,
+      videoUrl: String(body.video_url || body.videoUrl || '').trim() || null,
       sortOrder: normalizeSortOrder(body.sort_order),
     },
   };
@@ -68,7 +70,7 @@ export async function onRequestPut(context) {
 
     await env.NAV_DB.prepare(`
       UPDATE videos
-      SET title = ?, url = ?, cover = ?, desc = ?, category_id = ?, category_name = ?, platform = ?, bvid = ?, aid = ?, cid = ?, page = ?, youtube_id = ?, sort_order = ?, update_time = CURRENT_TIMESTAMP
+      SET title = ?, url = ?, cover = ?, desc = ?, category_id = ?, category_name = ?, platform = ?, bvid = ?, aid = ?, cid = ?, page = ?, youtube_id = ?, douyin_id = ?, video_url = ?, sort_order = ?, update_time = CURRENT_TIMESTAMP
       WHERE id = ?
     `).bind(
       payload.title,
@@ -83,6 +85,8 @@ export async function onRequestPut(context) {
       payload.cid,
       payload.page,
       payload.youtubeId,
+      payload.douyinId,
+      payload.videoUrl,
       payload.sortOrder,
       id,
     ).run();

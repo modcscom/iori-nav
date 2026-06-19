@@ -61,6 +61,9 @@ async function runIncrementalMigrations(env) {
   if (!videosCols.has('douyin_id')) {
     alterStatements.push(env.NAV_DB.prepare('ALTER TABLE videos ADD COLUMN douyin_id TEXT'));
   }
+  if (!videosCols.has('video_url')) {
+    alterStatements.push(env.NAV_DB.prepare('ALTER TABLE videos ADD COLUMN video_url TEXT'));
+  }
 
   for (const statement of alterStatements) {
     try {

@@ -30,6 +30,8 @@ function normalizeVideoPayload(body) {
       cid: String(body.cid || '').trim() || null,
       page: normalizeVideoPage(body.page),
       youtubeId: String(body.youtube_id || body.youtubeId || '').trim() || null,
+      douyinId: String(body.douyin_id || body.douyinId || '').trim() || null,
+      videoUrl: String(body.video_url || body.videoUrl || '').trim() || null,
       sortOrder: normalizeSortOrder(body.sort_order),
     },
   };
@@ -84,8 +86,8 @@ export async function onRequestPost(context) {
     if (!category) return errorResponse('视频分类不存在', 400);
 
     const insert = await env.NAV_DB.prepare(`
-      INSERT INTO videos (title, url, cover, desc, category_id, category_name, platform, bvid, aid, cid, page, youtube_id, sort_order)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO videos (title, url, cover, desc, category_id, category_name, platform, bvid, aid, cid, page, youtube_id, douyin_id, video_url, sort_order)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       payload.title,
       payload.url,
@@ -99,6 +101,8 @@ export async function onRequestPost(context) {
       payload.cid,
       payload.page,
       payload.youtubeId,
+      payload.douyinId,
+      payload.videoUrl,
       payload.sortOrder,
     ).run();
 

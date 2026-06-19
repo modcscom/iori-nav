@@ -79,6 +79,7 @@
       page: Number(els.videoPage.value || 1),
       youtube_id: els.videoYoutubeId.value.trim(),
       douyin_id: els.videoDouyinId.value.trim(),
+      video_url: els.videoVideoUrl?.value?.trim() || '',
       sort_order: els.videoSortOrder.value === '' ? undefined : Number(els.videoSortOrder.value),
     };
   }
@@ -281,6 +282,8 @@
     els.videoCid.value = video?.cid || '';
     els.videoPage.value = video?.page || 1;
     els.videoYoutubeId.value = video?.youtube_id || '';
+    els.videoDouyinId.value = video?.douyin_id || '';
+    els.videoVideoUrl.value = video?.video_url || '';
     els.videoSortOrder.value = video && video.sort_order !== 9999 ? video.sort_order : '';
     els.videoModalAdminTitle.textContent = video ? '编辑视频' : '新增视频';
     createVideoDropdown('videoCategoryWrapper', 'videoCategory', video?.category_id || null);
@@ -292,6 +295,7 @@
     const platform = els.videoPlatform?.value;
     els.bilibiliFields?.classList.toggle('hidden', platform !== 'bilibili');
     els.youtubeFields?.classList.toggle('hidden', platform !== 'youtube');
+    els.douyinFields?.classList.toggle('hidden', platform !== 'douyin');
   }
 
   // 解析 Bilibili URL，提取 bvid/aid/cid/page
@@ -472,7 +476,7 @@
           els.videoTitle.value = info.title || info.desc || '';
           els.videoDesc.value = info.desc || '';
           if (info.video_url) {
-            // 抖音直链可能需要特殊处理，暂时保存原始 URL
+            els.videoVideoUrl.value = info.video_url;
           }
           console.log('✅ 抖音视频信息获取成功:', info.title || info.desc);
         } else {
@@ -589,6 +593,7 @@
       videoPage: $('videoPage'),
       videoYoutubeId: $('videoYoutubeId'),
       videoDouyinId: $('videoDouyinId'),
+      videoVideoUrl: $('videoVideoUrl'),
       videoSortOrder: $('videoSortOrder'),
       closeVideoModalAdmin: $('closeVideoModalAdmin'),
       cancelVideoBtn: $('cancelVideoBtn'),

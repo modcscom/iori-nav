@@ -18,10 +18,10 @@
  */
 
 // 数据库 Schema 版本 - 修改此值会触发迁移
-export const SCHEMA_VERSION = 'v6';
+export const SCHEMA_VERSION = 'v7';
 
 // 上一个数据库 Schema 版本 - 仅用于首次迁移成功后 best-effort 清理旧迁移标记
-export const PREVIOUS_SCHEMA_VERSION = 'v5';
+export const PREVIOUS_SCHEMA_VERSION = 'v6';
 
 // 首页 HTML 缓存版本 - 修改此值会强制刷新首页缓存
 export const HOME_CACHE_VERSION = 'v14';
@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS videos (
   page INTEGER DEFAULT 1,
   youtube_id TEXT,
   douyin_id TEXT,
+  video_url TEXT,
   sort_order INTEGER NOT NULL DEFAULT 9999,
   create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
