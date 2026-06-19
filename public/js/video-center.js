@@ -52,12 +52,12 @@
       return `<iframe src="${src}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    // 抖音播放 - 使用视频直链
+    // 抖音播放 - 使用视频直链（通过代理解决 CORS）
     if (video.platform === 'douyin') {
       // 优先使用解析后的视频直链
       if (video.video_url) {
-        const safeUrl = normalizeUrl(video.video_url);
-        return `<video src="${escapeHTML(safeUrl)}" class="w-full h-full" controls autoplay></video>`;
+        const proxyUrl = `/api/videos/proxy?url=${encodeURIComponent(video.video_url)}`;
+        return `<video src="${escapeHTML(proxyUrl)}" class="w-full h-full" controls autoplay></video>`;
       }
       // 备用：使用原始链接尝试 iframe 嵌入
       const safeUrl = normalizeUrl(video.url);
