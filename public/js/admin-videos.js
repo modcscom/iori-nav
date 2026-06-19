@@ -588,6 +588,7 @@
       videoCid: $('videoCid'),
       videoPage: $('videoPage'),
       videoYoutubeId: $('videoYoutubeId'),
+      videoDouyinId: $('videoDouyinId'),
       videoSortOrder: $('videoSortOrder'),
       closeVideoModalAdmin: $('closeVideoModalAdmin'),
       cancelVideoBtn: $('cancelVideoBtn'),
